@@ -14,15 +14,8 @@
     "popper"
   ],
   "license": "MIT",
-  "main": "./dist/vue-mention.umd.js",
-  "module": "./dist/vue-mention.es.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/vue-mention.es.js",
-      "require": "./dist/vue-mention.umd.js"
-    }
-  },
+  "main": "dist/vue-mention.umd.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development vite build --watch",
     "build": "cross-env NODE_ENV=production vite build && tsc -d --emitDeclarationOnly && vue-typegen gen -s src -o dist",
