@@ -124,7 +124,7 @@ export default defineComponent({
 
     // Input element management
 
-    let input: HTMLElement
+    let input = ref<HTMLElement>(null)
     const el = ref<HTMLDivElement>(null)
 
     function getInput () {
@@ -132,15 +132,15 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      input = getInput()
+      input.value = getInput()
       attach()
     })
 
     onUpdated(() => {
       const newInput = getInput()
-      if (newInput !== input) {
+      if (newInput !== input.value) {
         detach()
-        input = newInput
+        input.value = newInput
         attach()
       }
     })
@@ -152,22 +152,22 @@ export default defineComponent({
     // Events
 
     function attach () {
-      if (input) {
-        input.addEventListener('input', onInput)
-        input.addEventListener('keydown', onKeyDown)
-        input.addEventListener('keyup', onKeyUp)
-        input.addEventListener('scroll', onScroll)
-        input.addEventListener('blur', onBlur)
+      if (input.value) {
+        input.value.addEventListener('input', onInput)
+        input.value.addEventListener('keydown', onKeyDown)
+        input.value.addEventListener('keyup', onKeyUp)
+        input.value.addEventListener('scroll', onScroll)
+        input.value.addEventListener('blur', onBlur)
       }
     }
 
     function detach () {
-      if (input) {
-        input.removeEventListener('input', onInput)
-        input.removeEventListener('keydown', onKeyDown)
-        input.removeEventListener('keyup', onKeyUp)
-        input.removeEventListener('scroll', onScroll)
-        input.removeEventListener('blur', onBlur)
+      if (input.value) {
+        input.value.removeEventListener('input', onInput)
+        input.value.removeEventListener('keydown', onKeyDown)
+        input.value.removeEventListener('keyup', onKeyUp)
+        input.value.removeEventListener('scroll', onScroll)
+        input.value.removeEventListener('blur', onBlur)
       }
     }
 
@@ -227,26 +227,26 @@ export default defineComponent({
     }
 
     function getSelectionStart () {
-      return input.isContentEditable ? window.getSelection().anchorOffset : (input as HTMLInputElement).selectionStart
+      return input.value.isContentEditable ? window.getSelection().anchorOffset : (input.value as HTMLInputElement).selectionStart
     }
 
     function setCaretPosition (index: number) {
       nextTick(() => {
-        (input as HTMLInputElement).selectionEnd = index
+        (input.value as HTMLInputElement).selectionEnd = index
       })
     }
 
     function getValue () {
-      return input.isContentEditable ? window.getSelection().anchorNode.textContent : (input as HTMLInputElement).value
+      return input.value.isContentEditable ? window.getSelection().anchorNode.textContent : (input.value as HTMLInputElement).value
     }
 
     function setValue (value) {
-      (input as HTMLInputElement).value = value
+      (input.value as HTMLInputElement).value = value
       emitInputEvent('input')
     }
 
     function emitInputEvent (type: string) {
-      input.dispatchEvent(new Event(type))
+      input.value.dispatchEvent(new Event(type))
     }
 
     let lastSearchText: string = null
@@ -294,18 +294,18 @@ export default defineComponent({
 
     function updateCaretPosition () {
       if (currentKey.value) {
-        if (input.isContentEditable) {
+        if (input.value.isContentEditable) {
           const rect = window.getSelection().getRangeAt(0).getBoundingClientRect()
-          const inputRect = input.getBoundingClientRect()
+          const inputRect = input.value.getBoundingClientRect()
           caretPosition.value = {
             left: rect.left - inputRect.left,
             top: rect.top - inputRect.top,
             height: rect.height,
           }
         } else {
-          caretPosition.value = getCaretPosition(input, currentKeyIndex)
+          caretPosition.value = getCaretPosition(input.value, currentKeyIndex)
         }
-        caretPosition.value.top -= input.scrollTop
+        caretPosition.value.top -= input.value.scrollTop
         if (props.caretHeight) {
           caretPosition.value.height = props.caretHeight
         } else if (isNaN(caretPosition.value.height)) {
@@ -339,7 +339,7 @@ export default defineComponent({
     function applyMention (itemIndex: number) {
       const item = displayedItems.value[itemIndex]
       const value = (props.omitKey ? '' : currentKey.value) + String(props.mapInsert ? props.mapInsert(item, currentKey.value) : item.value) + (props.insertSpace ? ' ' : '')
-      if (input.isContentEditable) {
+      if (input.value.isContentEditable) {
         const range = window.getSelection().getRangeAt(0)
         range.setStart(range.startContainer, range.startOffset - currentKey.value.length - (lastSearchText ? lastSearchText.length : 0))
         range.deleteContents()
@@ -360,12 +360,18 @@ export default defineComponent({
 
     return {
       el,
+      input,
       currentKey,
       oldKey,
       caretPosition,
       displayedItems,
       selectedIndex,
       applyMention,
+      onInput,
+      getValue,
+      getLastSearchText,
+      onKeyDown,
+      getSelectionStart
     }
   },
 })
