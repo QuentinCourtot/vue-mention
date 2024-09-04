@@ -36,7 +36,7 @@
     "prepublishOnly": "npm run lint && npm run build && npm run test",
     "lint": "eslint --ext .ts,.js,.vue src",
     "test": "cd ../test-e2e && yarn run test:e2e:run",
-    "install": "yarn build"
+    "install": "npm run build"
   },
   "repository": {
     "type": "git",
