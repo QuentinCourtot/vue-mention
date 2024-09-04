@@ -14,13 +14,20 @@
     "popper"
   ],
   "license": "MIT",
+  "type": "commonjs",
   "main": "dist/vue-mention.umd.js",
-  "module": "dist/vue-mention.es.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/vue-mention.mjs",
+  "types": "dist/src/index.d.mts",
   "exports": {
     ".": {
-      "import": "./dist/vue-mention.es.js",
-      "require": "./dist/vue-mention.umd.js"
+      "import": {
+        "types": "./dist/src/index.d.mts",
+        "default": "./dist/vue-mention.mjs"
+      },
+      "require": {
+        "types": "./dist/src/index.d.mts",
+        "default": "./dist/vue-mention.umd.js"
+      }
     }
   },
   "scripts": {
@@ -68,11 +75,11 @@
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vue": "^8.2.0",
+    "floating-vue": "^2.0.0-beta.1",
     "typescript": "^4.5.4",
-    "vite": "^2.7.10",
+    "vite": "^5.4.2",
     "vue": "^3.2.26",
-    "vue-typegen": "^0.1.1",
-    "floating-vue": "^2.0.0-beta.1"
+    "vue-typegen": "^0.1.1"
   },
   "browserslist": [
     "> 1%",
