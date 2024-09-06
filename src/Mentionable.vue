@@ -237,6 +237,7 @@ export default defineComponent({
     }
 
     function getValue () {
+      console.error(input.value.isContentEditable ? window.getSelection().anchorNode.textContent : (input.value as HTMLInputElement).value)
       return input.value.isContentEditable ? window.getSelection().anchorNode.textContent : (input.value as HTMLInputElement).value
     }
 
@@ -337,10 +338,9 @@ export default defineComponent({
     // Apply
 
     function applyMention (itemIndex: number) {
-      console.error('applyMention')
+      console.error('applyMention start')
       const item = displayedItems.value[itemIndex]
       const value = (props.omitKey ? '' : currentKey.value) + String(props.mapInsert ? props.mapInsert(item, currentKey.value) : item.value) + (props.insertSpace ? ' ' : '')
-      console.error(item, value, input.value.isContentEditable)
       if (input.value.isContentEditable) {
         const range = window.getSelection().getRangeAt(0)
         range.setStart(range.startContainer, range.startOffset - currentKey.value.length - (lastSearchText ? lastSearchText.length : 0))
@@ -349,15 +349,19 @@ export default defineComponent({
         range.setStart(range.endContainer, range.endOffset)
         emitInputEvent('input')
       } else {
-        console.error()
+        console.error(input, input.value)
         setValue(replaceText(getValue(), searchText.value, value, currentKeyIndex))
+        console.error(input, input.value)
         setCaretPosition(currentKeyIndex + value.length)
       }
       emit('apply', item, currentKey.value, value)
       closeMenu()
+      console.error('applyMention end')
     }
 
     function replaceText (text: string, searchString: string, newText: string, index: number) {
+      console.error(text)
+      console.error(text.slice(0, index) + newText + text.slice(index + searchString.length + 1, text.length))
       return text.slice(0, index) + newText + text.slice(index + searchString.length + 1, text.length)
     }
 
