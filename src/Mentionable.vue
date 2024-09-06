@@ -337,8 +337,10 @@ export default defineComponent({
     // Apply
 
     function applyMention (itemIndex: number) {
+      console.error('applyMention')
       const item = displayedItems.value[itemIndex]
       const value = (props.omitKey ? '' : currentKey.value) + String(props.mapInsert ? props.mapInsert(item, currentKey.value) : item.value) + (props.insertSpace ? ' ' : '')
+      console.error(item, value, input.value.isContentEditable)
       if (input.value.isContentEditable) {
         const range = window.getSelection().getRangeAt(0)
         range.setStart(range.startContainer, range.startOffset - currentKey.value.length - (lastSearchText ? lastSearchText.length : 0))
@@ -347,6 +349,7 @@ export default defineComponent({
         range.setStart(range.endContainer, range.endOffset)
         emitInputEvent('input')
       } else {
+        console.error()
         setValue(replaceText(getValue(), searchText.value, value, currentKeyIndex))
         setCaretPosition(currentKeyIndex + value.length)
       }
